@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Trash, Trash2 } from "react-feather"
+import { useState } from "react"
+import { Trash2 } from "react-feather"
 
 function Item() {
   const [items, setItems] = useState([
