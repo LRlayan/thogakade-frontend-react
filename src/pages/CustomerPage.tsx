@@ -1,57 +1,58 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
+import {getAllCustomer, saveCustomer} from "../reducer/CustomerReducer.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {Customer} from "../models/Customer.ts";
+import {AppDispatch} from "../store/store.tsx";
 
-function Customer() {
-  const [customers, setCustomers] = useState([
-    {
-      id: "C001",
-      name: "John Doe",
-      nic: "123456789V",
-      email: "john@example.com",
-      phone: "1234567890"
-    },
-    {
-      id: "C002",
-      name: "Jane Smith",
-      nic: "987654321X",
-      email: "jane@example.com",
-      phone: "0987654321"
-    }
-  ])
-
+function CustomerPage() {
   const [id, setId] = useState("")
   const [name, setName] = useState("")
-  const [nic, setNic] = useState("")
+  const [address, setAddress] = useState("")
   const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
+  // const [phone, setPhone] = useState("")
+  const dispatch = useDispatch<AppDispatch>();
   const [isEditing, setIsEditing] = useState(false)
 
+  const customer = useSelector((state) => state.customer || []);
+
+  useEffect(() => {
+      getAllCustomers();
+  })
+
+  const getAllCustomers = async () => {
+      await dispatch(getAllCustomer());
+  }
+
   const handleAdd = () => {
-    if (!id || !name || !nic || !email || !phone) {
+    if (!id || !name || !address || !email) {
       alert("All fields are required!")
       return
     }
-    setCustomers([...customers, { id, name, nic, email, phone }])
+    setCustomers([...customers, { id, name, address, email}])
+    const newCustomer = new Customer(id, name, address, email);
+    dispatch(saveCustomer(newCustomer));
+    getAllCustomers();
     resetForm()
   }
 
   const handleEdit = (customer: any) => {
     setId(customer.id)
     setName(customer.name)
-    setNic(customer.nic)
+    setAddress(customer.address)
     setEmail(customer.email)
-    setPhone(customer.phone)
+    // setPhone(customer.phone)
     setIsEditing(true)
   }
 
   const handleUpdate = () => {
-    if (!id || !name || !nic || !email || !phone) {
+    if (!id || !name || !address || !email) {
       alert("All fields are required!")
       return
     }
     setCustomers(
       customers.map((customer) =>
-        customer.id === id ? { id, name, nic, email, phone } : customer
+        customer.id === id ? { id, name, address, email} : customer
       )
     )
     resetForm()
@@ -66,9 +67,9 @@ function Customer() {
   const resetForm = () => {
     setId("")
     setName("")
-    setNic("")
+    setAddress("")
     setEmail("")
-    setPhone("")
+    // setPhone("")
     setIsEditing(false)
   }
 
@@ -93,10 +94,10 @@ function Customer() {
         />
         <input
           type="text"
-          name="nic"
-          placeholder="NIC"
-          value={nic}
-          onChange={(e) => setNic(e.target.value)}
+          name="address"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           className="border p-2 rounded"
         />
         <input
@@ -107,14 +108,14 @@ function Customer() {
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 rounded"
         />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="border p-2 rounded"
-        />
+        {/*<input*/}
+        {/*  type="text"*/}
+        {/*  name="phone"*/}
+        {/*  placeholder="Phone"*/}
+        {/*  value={phone}*/}
+        {/*  onChange={(e) => setPhone(e.target.value)}*/}
+        {/*  className="border p-2 rounded"*/}
+        {/*/>*/}
       </div>
       <div className="flex justify-end">
         {isEditing ? (
@@ -146,27 +147,27 @@ function Customer() {
           <tr className="bg-gray-100">
             <th className="border px-4 py-2">ID</th>
             <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">NIC</th>
+            <th className="border px-4 py-2">Address</th>
             <th className="border px-4 py-2">Email</th>
-            <th className="border px-4 py-2">Phone</th>
+            {/*<th className="border px-4 py-2">Phone</th>*/}
             <th className="border px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {customers.map((customer) => (
+          {customer.map((customers : Customer) => (
             <tr
-              key={customer.id}
-              onClick={() => handleEdit(customer)}
+              key={customers.customerId}
+              onClick={() => handleEdit(customers)}
               className="hover:cursor-pointer hover:bg-slate-600 hover:text-white"
             >
-              <td className="border px-4 py-2">{customer.id}</td>
-              <td className="border px-4 py-2">{customer.name}</td>
-              <td className="border px-4 py-2">{customer.nic}</td>
-              <td className="border px-4 py-2">{customer.email}</td>
-              <td className="border px-4 py-2">{customer.phone}</td>
+              <td className="border px-4 py-2">{customers.customerId}</td>
+              <td className="border px-4 py-2">{customers.name}</td>
+              <td className="border px-4 py-2">{customers.address}</td>
+              <td className="border px-4 py-2">{customers.email}</td>
+              {/*<td className="border px-4 py-2">{customer.phone}</td>*/}
               <td className="border px-4 py-2 text-center">
                 <button
-                  onClick={() => handleDelete(customer.id)}
+                  onClick={() => handleDelete(customers.customerId)}
                   className="bg-red-500 text-white p-2 rounded-lg"
                 >
                   <Trash2 />
@@ -180,4 +181,4 @@ function Customer() {
   )
 }
 
-export default Customer
+export default CustomerPage
