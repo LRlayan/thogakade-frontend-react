@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../store/store.tsx";
-import {getALlItem, saveItem} from "../reducer/ItemReducer.ts";
+import {getALlItem, saveItem, updateItem} from "../reducer/ItemReducer.ts";
 import {Item} from "../models/Item.ts";
 
 function ItemPage() {
@@ -46,18 +46,8 @@ function ItemPage() {
       alert("All fields are required!")
       return
     }
-    setItems(
-      items.map((item) =>
-        item.item_id === itemId
-          ? {
-              item_id: itemId,
-              name,
-              quantity: parseInt(quantity),
-              price: parseFloat(price)
-            }
-          : item
-      )
-    )
+    const updateCustomerDetails = new Item(0,itemId,name,parseInt(quantity),parseInt(price));
+    dispatch(updateItem(updateCustomerDetails));
     resetForm()
   }
 
