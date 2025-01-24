@@ -1,32 +1,35 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "../store/store.tsx";
+import {saveItem} from "../reducer/ItemReducer.ts";
+import {Item} from "../models/Item.ts";
 
-function Item() {
-  const [items, setItems] = useState([
-    { item_id: "I001", name: "Arduino Board", quantity: 10, price: 20.5 },
-    { item_id: "I002", name: "Raspberry Pi", quantity: 5, price: 35.0 }
-  ])
+function ItemPage() {
 
   const [itemId, setItemId] = useState("")
   const [name, setName] = useState("")
   const [quantity, setQuantity] = useState("")
   const [price, setPrice] = useState("")
   const [isEditing, setIsEditing] = useState(false)
+  const dispatch = useDispatch<AppDispatch>();
+  const items = useSelector((state) => state.item || []);
+
+  useEffect(() => {
+      getAllItem();
+  })
+
+  function getAllItem() {
+
+  }
 
   const handleAdd = () => {
     if (!itemId || !name || !quantity || !price) {
       alert("All fields are required!")
       return
     }
-    setItems([
-      ...items,
-      {
-        item_id: itemId,
-        name,
-        quantity: parseInt(quantity),
-        price: parseFloat(price)
-      }
-    ])
+    const newItem = new Item(0,itemId,name,parseInt(quantity),parseInt(price));
+    dispatch(saveItem(newItem));
     resetForm()
   }
 
@@ -78,7 +81,7 @@ function Item() {
         <input
           type="text"
           name="item_id"
-          placeholder="Item ID"
+          placeholder="ItemPage ID"
           value={itemId}
           onChange={(e) => setItemId(e.target.value)}
           className="border p-2 rounded"
@@ -137,7 +140,7 @@ function Item() {
       <table className="min-w-full table-auto border-collapse mt-6">
         <thead>
           <tr className="bg-gray-100">
-            <th className="border px-4 py-2">Item ID</th>
+            <th className="border px-4 py-2">ItemPage ID</th>
             <th className="border px-4 py-2">Name</th>
             <th className="border px-4 py-2">Quantity</th>
             <th className="border px-4 py-2">Price</th>
@@ -145,21 +148,21 @@ function Item() {
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
+          {items.map((item: Item) => (
             <tr
-              key={item.item_id}
+              key={item.itemId}
               onClick={() => handleEdit(item)}
               className="hover:cursor-pointer hover:bg-slate-600 hover:text-white"
             >
-              <td className="border px-4 py-2">{item.item_id}</td>
+              <td className="border px-4 py-2">{item.itemId}</td>
               <td className="border px-4 py-2">{item.name}</td>
               <td className="border px-4 py-2">{item.quantity}</td>
               <td className="border px-4 py-2">{item.price.toFixed(2)}</td>
               <td className="border px-4 py-2 text-center">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(item.item_id)
+                    e.stopPropagation();
+                    handleDelete(item.itemId);
                   }}
                   className="bg-red-500 text-white p-2 rounded-lg"
                 >
@@ -174,4 +177,4 @@ function Item() {
   )
 }
 
-export default Item
+export default ItemPage
