@@ -50,6 +50,12 @@ const customerSlice = createSlice({
            .addCase(getAllCustomer.fulfilled,(state,action) => {
                return action.payload || [];
            })
+           .addCase(getAllCustomer.pending,() => {
+               console.log("pending get all customers");
+           })
+           .addCase(getAllCustomer.rejected, () => {
+               console.log("rejected get all customers");
+           })
    }
 });
 
