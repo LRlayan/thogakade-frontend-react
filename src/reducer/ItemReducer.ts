@@ -24,7 +24,7 @@ export const updateItem = createAsyncThunk(
     'item/updateItem',
     async (item: Item) => {
         try {
-            const response = await api.put('/update',item);
+            const response = await api.put(`/update/${item.itemId}`,item);
             return response.data;
         } catch (e) {
             return console.log('failed to update item');
@@ -51,7 +51,7 @@ export const getALlItem = createAsyncThunk(
             const response = await api.get('/getAll');
             return response.data;
         } catch (e) {
-            return console.log("failed to get items");
+            return console.log("failed to get items",e);
         }
     }
 )
@@ -93,7 +93,7 @@ const itemSlice = createSlice({
                 console.log("rejected to delete customer!");
             })
             .addCase(getALlItem.fulfilled,(state,action) => {
-                return action.payload;
+                return action.payload || [];
             })
             .addCase(getALlItem.pending,() => {
                 console.log("Pending getAll items");
