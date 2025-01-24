@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
-import {getAllCustomer, saveCustomer} from "../reducer/CustomerReducer.ts";
+import {getAllCustomer, saveCustomer, updateCustomer} from "../reducer/CustomerReducer.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {Customer} from "../models/Customer.ts";
 import {AppDispatch} from "../store/store.tsx";
@@ -10,7 +10,6 @@ function CustomerPage() {
   const [name, setName] = useState("")
   const [address, setAddress] = useState("")
   const [email, setEmail] = useState("")
-  // const [phone, setPhone] = useState("")
   const dispatch = useDispatch<AppDispatch>();
   const [isEditing, setIsEditing] = useState(false)
 
@@ -18,7 +17,7 @@ function CustomerPage() {
 
   useEffect(() => {
       getAllCustomers();
-  })
+  });
 
   const getAllCustomers = async () => {
       await dispatch(getAllCustomer());
@@ -29,7 +28,7 @@ function CustomerPage() {
       alert("All fields are required!")
       return
     }
-    setCustomers([...customers, { id, name, address, email}])
+    // setCustomers([...customers, { id, name, address, email}])
     const newCustomer = new Customer(id, name, address, email);
     dispatch(saveCustomer(newCustomer));
     getAllCustomers();
@@ -37,10 +36,10 @@ function CustomerPage() {
   }
 
   const handleEdit = (customer: any) => {
-    setId(customer.id)
-    setName(customer.name)
-    setAddress(customer.address)
-    setEmail(customer.email)
+    setId(customer.customerId);
+    setName(customer.name);
+    setAddress(customer.address);
+    setEmail(customer.email);
     // setPhone(customer.phone)
     setIsEditing(true)
   }
@@ -50,11 +49,8 @@ function CustomerPage() {
       alert("All fields are required!")
       return
     }
-    setCustomers(
-      customers.map((customer) =>
-        customer.id === id ? { id, name, address, email} : customer
-      )
-    )
+    const updateCustomerDetails = new Customer(id,name,address,email);
+    dispatch(updateCustomer(updateCustomerDetails));
     resetForm()
   }
 
@@ -69,7 +65,6 @@ function CustomerPage() {
     setName("")
     setAddress("")
     setEmail("")
-    // setPhone("")
     setIsEditing(false)
   }
 
@@ -108,14 +103,6 @@ function CustomerPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 rounded"
         />
-        {/*<input*/}
-        {/*  type="text"*/}
-        {/*  name="phone"*/}
-        {/*  placeholder="Phone"*/}
-        {/*  value={phone}*/}
-        {/*  onChange={(e) => setPhone(e.target.value)}*/}
-        {/*  className="border p-2 rounded"*/}
-        {/*/>*/}
       </div>
       <div className="flex justify-end">
         {isEditing ? (
@@ -149,7 +136,6 @@ function CustomerPage() {
             <th className="border px-4 py-2">Name</th>
             <th className="border px-4 py-2">Address</th>
             <th className="border px-4 py-2">Email</th>
-            {/*<th className="border px-4 py-2">Phone</th>*/}
             <th className="border px-4 py-2">Actions</th>
           </tr>
         </thead>
@@ -164,7 +150,6 @@ function CustomerPage() {
               <td className="border px-4 py-2">{customers.name}</td>
               <td className="border px-4 py-2">{customers.address}</td>
               <td className="border px-4 py-2">{customers.email}</td>
-              {/*<td className="border px-4 py-2">{customer.phone}</td>*/}
               <td className="border px-4 py-2 text-center">
                 <button
                   onClick={() => handleDelete(customers.customerId)}

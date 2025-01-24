@@ -30,6 +30,18 @@ export const getAllCustomer = createAsyncThunk(
             console.log("failed to get customers!",e);
         }
     }
+);
+
+export const updateCustomer = createAsyncThunk(
+    'customer/updateCustomer',
+    async (customer: Customer) => {
+        try {
+            const response = await api.put(`/update/${customer.customerId}`,customer);
+            return response.data;
+        } catch (e) {
+            return console.log('failed to update customer ', e);
+        }
+    }
 )
 
 const customerSlice = createSlice({
@@ -55,6 +67,18 @@ const customerSlice = createSlice({
            })
            .addCase(getAllCustomer.rejected, () => {
                console.log("rejected get all customers");
+           })
+           .addCase(updateCustomer.fulfilled, (state,action) => {
+               const index = state.findIndex(c => c.customerId === action.payload.customerId);
+               if (index !== -1) {
+                   state[index] = action.payload;
+               }
+           })
+           .addCase(updateCustomer.pending, () => {
+               console.log("Pending to update customer");
+           })
+           .addCase(updateCustomer.rejected, () => {
+               console.log("Rejected to update customer");
            })
    }
 });
