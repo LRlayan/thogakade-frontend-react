@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../store/store.tsx";
-import {getALlItem, saveItem, updateItem} from "../reducer/ItemReducer.ts";
+import {deleteItem, getALlItem, saveItem, updateItem} from "../reducer/ItemReducer.ts";
 import {Item} from "../models/Item.ts";
 
 function ItemPage() {
@@ -53,7 +53,7 @@ function ItemPage() {
 
   const handleDelete = (itemId: string) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      setItems(items.filter((item) => item.item_id !== itemId))
+        dispatch(deleteItem(itemId));
     }
   }
 
