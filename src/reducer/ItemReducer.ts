@@ -32,6 +32,18 @@ export const updateItem = createAsyncThunk(
     }
 )
 
+export const deleteItem = createAsyncThunk(
+    'item/deleteCustomer',
+    async (itemId: string) => {
+        try {
+            const response = await api.delete(`/delete/${itemId}`);
+            return response.data;
+        } catch (e) {
+            return console.log('failed to delete item');
+        }
+    }
+)
+
 const itemSlice = createSlice({
     name:'item',
     initialState:initialState,
@@ -57,6 +69,15 @@ const itemSlice = createSlice({
                 console.log("pending to update customer!");
             })
             .addCase(updateItem.rejected,() => {
+                console.log("rejected to delete customer!");
+            })
+            .addCase(deleteItem.fulfilled,(state,action) => {
+                return state.filter(i => i.itemId !== action.meta.arg);
+            })
+            .addCase(deleteItem.pending,() => {
+                console.log("pending to delete customer!");
+            })
+            .addCase(deleteItem.rejected,() => {
                 console.log("rejected to delete customer!");
             })
     }
