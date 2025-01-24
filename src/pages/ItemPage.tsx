@@ -19,8 +19,8 @@ function ItemPage() {
       getAllItems();
   });
 
-  function getAllItems() {
-      getALlItem();
+  const getAllItems = async () => {
+      await dispatch(getALlItem());
   }
 
   const handleAdd = () => {
@@ -34,7 +34,7 @@ function ItemPage() {
   }
 
   const handleEdit = (item: any) => {
-    setItemId(item.item_id)
+    setItemId(item.itemId)
     setName(item.name)
     setQuantity(item.quantity)
     setPrice(item.price)
@@ -147,7 +147,7 @@ function ItemPage() {
               <td className="border px-4 py-2">{item.itemId}</td>
               <td className="border px-4 py-2">{item.name}</td>
               <td className="border px-4 py-2">{item.quantity}</td>
-              <td className="border px-4 py-2">{item.price.toFixed(2)}</td>
+              <td className="border px-4 py-2">{item.price}</td>
               <td className="border px-4 py-2 text-center">
                 <button
                   onClick={(e) => {
