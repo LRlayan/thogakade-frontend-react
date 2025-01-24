@@ -8,7 +8,7 @@ export function RootLayout() {
   const routeTitles: any = {
     "/": "Home",
     "/customer": "CustomerPage Management",
-    "/item": "Item Management",
+    "/item": "ItemPage Management",
     "/place-order": "Order Management"
   }
 
