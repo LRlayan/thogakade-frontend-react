@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
-import {getAllCustomer, saveCustomer, updateCustomer} from "../reducer/CustomerReducer.ts";
+import {deleteCustomer, getAllCustomer, saveCustomer, updateCustomer} from "../reducer/CustomerReducer.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {Customer} from "../models/Customer.ts";
 import {AppDispatch} from "../store/store.tsx";
@@ -56,7 +56,7 @@ function CustomerPage() {
 
   const handleDelete = (customerId: string) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
-      setCustomers(customers.filter((customer) => customer.id !== customerId))
+        dispatch(deleteCustomer(customerId));
     }
   }
 

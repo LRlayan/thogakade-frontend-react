@@ -44,6 +44,17 @@ export const updateCustomer = createAsyncThunk(
     }
 )
 
+export const deleteCustomer = createAsyncThunk(
+    'customer/deleteCustomer',
+    async (customerId : String) => {
+        try {
+            return await api.delete(`/delete/${customerId}`);
+        } catch (e) {
+            console.log("Failed to delete customer!",e);
+        }
+    }
+)
+
 const customerSlice = createSlice({
    name:'customer',
    initialState: initialState,
@@ -79,6 +90,15 @@ const customerSlice = createSlice({
            })
            .addCase(updateCustomer.rejected, () => {
                console.log("Rejected to update customer");
+           })
+           .addCase(deleteCustomer.fulfilled, (state,action) => {
+               return state.filter(c => c.customerId !== action.meta.arg);
+           })
+           .addCase(deleteCustomer.pending, () => {
+               console.log("Pending to delete Customer !");
+           })
+           .addCase(deleteCustomer.rejected, () => {
+               console.log("Rejected to delete customer");
            })
    }
 });
