@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import { Trash2 } from "react-feather"
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../store/store.tsx";
-import {saveItem} from "../reducer/ItemReducer.ts";
+import {getALlItem, saveItem} from "../reducer/ItemReducer.ts";
 import {Item} from "../models/Item.ts";
 
 function ItemPage() {
@@ -16,11 +16,11 @@ function ItemPage() {
   const items = useSelector((state) => state.item || []);
 
   useEffect(() => {
-      getAllItem();
-  })
+      getAllItems();
+  });
 
-  function getAllItem() {
-
+  function getAllItems() {
+      getALlItem();
   }
 
   const handleAdd = () => {
