@@ -44,6 +44,18 @@ export const deleteItem = createAsyncThunk(
     }
 )
 
+export const getALlItem = createAsyncThunk(
+    'item/getAllItem',
+    async () => {
+        try {
+            const response = await api.get('/getAll');
+            return response.data;
+        } catch (e) {
+            return console.log("failed to get items");
+        }
+    }
+)
+
 const itemSlice = createSlice({
     name:'item',
     initialState:initialState,
@@ -79,6 +91,15 @@ const itemSlice = createSlice({
             })
             .addCase(deleteItem.rejected,() => {
                 console.log("rejected to delete customer!");
+            })
+            .addCase(getALlItem.fulfilled,(state,action) => {
+                return action.payload;
+            })
+            .addCase(getALlItem.pending,() => {
+                console.log("Pending getAll items");
+            })
+            .addCase(getALlItem.rejected,() => {
+                console.log("rejected getAll item");
             })
     }
 });
